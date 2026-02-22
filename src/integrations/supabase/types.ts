@@ -14,7 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          base_price: number
+          id: string
+          item_name: string
+          item_total: number
+          order_id: string
+          quantity: number
+        }
+        Insert: {
+          base_price?: number
+          id?: string
+          item_name: string
+          item_total?: number
+          order_id: string
+          quantity?: number
+        }
+        Update: {
+          base_price?: number
+          id?: string
+          item_name?: string
+          item_total?: number
+          order_id?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_modifiers: {
+        Row: {
+          id: string
+          modifier_name: string
+          modifier_price: number
+          order_item_id: string
+        }
+        Insert: {
+          id?: string
+          modifier_name: string
+          modifier_price?: number
+          order_item_id: string
+        }
+        Update: {
+          id?: string
+          modifier_name?: string
+          modifier_price?: number
+          order_item_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_modifiers_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          customer_name: string | null
+          customer_phone: string | null
+          id: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          store_id: string
+          total_amount: number
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string | null
+          customer_phone?: string | null
+          id?: string
+          order_status?: Database["public"]["Enums"]["order_status"]
+          store_id: string
+          total_amount?: number
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string | null
+          customer_phone?: string | null
+          id?: string
+          order_status?: Database["public"]["Enums"]["order_status"]
+          store_id?: string
+          total_amount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stores: {
+        Row: {
+          created_at: string
+          id: string
+          phone_number: string
+          store_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          phone_number: string
+          store_name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          phone_number?: string
+          store_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +145,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      order_status:
+        | "pending"
+        | "confirmed"
+        | "preparing"
+        | "ready"
+        | "delivered"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +278,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      order_status: [
+        "pending",
+        "confirmed",
+        "preparing",
+        "ready",
+        "delivered",
+        "cancelled",
+      ],
+    },
   },
 } as const
