@@ -8,15 +8,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCartStore } from "@/store/cartStore";
 import { useLocationStore } from "@/store/locationStore";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft, CheckCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
+
+const STORE_ID = "355aad93-fb3d-4b7a-a9de-64efd77437f3";
 
 const checkoutSchema = z.object({
-  name: z.string().min(2, "Nombre requerido"),
-  phone: z.string().min(8, "Teléfono inválido"),
-  email: z.string().email("Email inválido"),
-  address: z.string().min(5, "Dirección requerida"),
-  instructions: z.string().optional(),
+  name: z.string().min(2, "Nombre requerido").max(100),
+  phone: z.string().min(8, "Teléfono inválido").max(20),
+  email: z.string().email("Email inválido").max(255),
+  address: z.string().min(5, "Dirección requerida").max(500),
+  instructions: z.string().max(500).optional(),
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
@@ -26,6 +29,8 @@ const CheckoutPage = () => {
   const { items, totalPrice, clearCart } = useCartStore();
   const { serviceType } = useLocationStore();
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const {
     register,
@@ -33,10 +38,47 @@ const CheckoutPage = () => {
     formState: { errors },
   } = useForm<CheckoutFormData>({ resolver: zodResolver(checkoutSchema) });
 
-  const onSubmit = (_data: CheckoutFormData) => {
-    setOrderPlaced(true);
-    clearCart();
-    toast.success("¡Orden realizada con éxito!");
+  const onSubmit = async (data: CheckoutFormData) => {
+    setSubmitting(true);
+    try {
+      const orderItems = items.map((item) => {
+        const modifiers: { modifier_name: string; modifier_price: number }[] = [];
+        if (item.size) modifiers.push({ modifier_name: `Tamaño: ${item.size}`, modifier_price: 0 });
+        if (item.crust) modifiers.push({ modifier_name: `Masa: ${item.crust}`, modifier_price: 0 });
+        item.addons.forEach((addon) => modifiers.push({ modifier_name: addon, modifier_price: 0 }));
+
+        return {
+          item_name: item.name,
+          base_price: item.unitPrice,
+          quantity: item.quantity,
+          item_total: item.unitPrice * item.quantity,
+          modifiers,
+        };
+      });
+
+      const { data: result, error } = await supabase.functions.invoke("create-order", {
+        body: {
+          store_id: STORE_ID,
+          customer_name: data.name,
+          customer_phone: data.phone,
+          total_amount: totalPrice(),
+          items: orderItems,
+        },
+      });
+
+      if (error) throw error;
+      if (result?.error) throw new Error(result.error);
+
+      setOrderId(result.order_id);
+      setOrderPlaced(true);
+      clearCart();
+      toast.success("¡Orden realizada con éxito!");
+    } catch (err: any) {
+      console.error("Checkout error:", err);
+      toast.error("Error al procesar tu orden. Intenta de nuevo.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (orderPlaced) {
@@ -44,6 +86,11 @@ const CheckoutPage = () => {
       <div className="container py-16 text-center space-y-6 max-w-md mx-auto">
         <CheckCircle className="h-20 w-20 text-pizza-green mx-auto" />
         <h1 className="font-display font-bold text-3xl">¡Gracias por tu orden!</h1>
+        {orderId && (
+          <p className="text-sm font-mono bg-muted rounded-lg px-4 py-2 inline-block">
+            Orden #{orderId.slice(0, 8).toUpperCase()}
+          </p>
+        )}
         <p className="text-muted-foreground">
           Tu pedido ha sido recibido y está siendo preparado. Recibirás una confirmación pronto.
         </p>
@@ -111,8 +158,12 @@ const CheckoutPage = () => {
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="w-full text-lg">
-            Realizar Pedido — Q{totalPrice().toFixed(2)}
+          <Button type="submit" size="lg" className="w-full text-lg" disabled={submitting}>
+            {submitting ? (
+              <><Loader2 className="h-5 w-5 animate-spin mr-2" /> Procesando...</>
+            ) : (
+              <>Realizar Pedido — Q{totalPrice().toFixed(2)}</>
+            )}
           </Button>
         </form>
 
