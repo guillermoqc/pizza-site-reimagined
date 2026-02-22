@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      menu_items: {
+        Row: {
+          base_price: number
+          category: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          name: string
+        }
+        Insert: {
+          base_price?: number
+          category: string
+          created_at?: string
+          description: string
+          id: string
+          image_url?: string | null
+          name: string
+        }
+        Update: {
+          base_price?: number
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           base_price: number
