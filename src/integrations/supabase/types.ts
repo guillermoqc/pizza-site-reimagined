@@ -74,6 +74,13 @@ export type Database = {
             foreignKeyName: "order_items_order_id_fkey"
             columns: ["order_id"]
             isOneToOne: false
+            referencedRelation: "order_full_details"
+            referencedColumns: ["order_id"]
+          },
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
             referencedRelation: "orders"
             referencedColumns: ["id"]
           },
@@ -99,6 +106,13 @@ export type Database = {
           order_item_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "order_modifiers_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: false
+            referencedRelation: "order_full_details"
+            referencedColumns: ["order_item_id"]
+          },
           {
             foreignKeyName: "order_modifiers_order_item_id_fkey"
             columns: ["order_item_id"]
@@ -169,7 +183,34 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      order_full_details: {
+        Row: {
+          customer_name: string | null
+          customer_phone: string | null
+          item_base_price: number | null
+          item_name: string | null
+          item_total: number | null
+          modifier_id: string | null
+          modifier_name: string | null
+          modifier_price: number | null
+          order_created_at: string | null
+          order_id: string | null
+          order_item_id: string | null
+          order_status: Database["public"]["Enums"]["order_status"] | null
+          quantity: number | null
+          store_id: string | null
+          total_amount: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
