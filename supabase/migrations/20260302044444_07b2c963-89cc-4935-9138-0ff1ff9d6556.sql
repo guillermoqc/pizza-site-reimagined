@@ -1,0 +1,1 @@
+ALTER VIEW public.order_full_details SET (security_invoker = on);
