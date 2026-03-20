@@ -4,7 +4,6 @@ import { ShoppingCart, MapPin, Menu, X, Pizza } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useLocationStore } from "@/store/locationStore";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import CartDrawer from "./CartDrawer";
 
 const navLinks = [

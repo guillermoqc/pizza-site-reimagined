@@ -23,17 +23,60 @@ interface CartState {
   totalPrice: () => number;
 }
 
+const normalizeAddons = (addons: string[]) => [...addons].sort();
+
+const isSameConfiguration = (
+  existing: CartItem,
+  incoming: Omit<CartItem, "id">,
+) => {
+  return (
+    existing.productId === incoming.productId &&
+    (existing.size || "") === (incoming.size || "") &&
+    (existing.crust || "") === (incoming.crust || "") &&
+    normalizeAddons(existing.addons).join(",") ===
+      normalizeAddons(incoming.addons).join(",")
+  );
+};
+
+const buildItemId = (item: Omit<CartItem, "id">) => {
+  const addonsKey = normalizeAddons(item.addons).join(",") || "no-addons";
+  const sizeKey = item.size || "default";
+  const crustKey = item.crust || "default";
+  return `${item.productId}-${sizeKey}-${crustKey}-${addonsKey}`;
+};
+
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
       addItem: (item) =>
-        set((state) => ({
-          items: [
-            ...state.items,
-            { ...item, id: `${item.productId}-${Date.now()}` },
-          ],
-        })),
+        set((state) => {
+          const quantity = Math.max(1, item.quantity);
+          const normalizedItem = {
+            ...item,
+            quantity,
+            addons: normalizeAddons(item.addons),
+          };
+          const existing = state.items.find((i) => isSameConfiguration(i, normalizedItem));
+
+          if (existing) {
+            return {
+              items: state.items.map((i) =>
+                i.id === existing.id ? { ...i, quantity: i.quantity + quantity } : i
+              ),
+            };
+          }
+
+          return {
+            items: [
+              ...state.items,
+              {
+                ...normalizedItem,
+                id: buildItemId(normalizedItem),
+              },
+            ],
+          };
+        }),
       removeItem: (id) =>
         set((state) => ({
           items: state.items.filter((i) => i.id !== id),
