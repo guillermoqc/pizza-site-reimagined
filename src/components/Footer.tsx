@@ -56,7 +56,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-background/10 mt-8 pt-6 text-center text-sm opacity-50">
-          © 2026 PizzaClone GT. Todos los derechos reservados. Este es un proyecto de demostración.
+          © 2026 PizzaClone GT. Todos los derechos reservados. 
         </div>
       </div>
     </footer>
