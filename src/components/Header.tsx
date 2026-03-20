@@ -16,10 +16,15 @@ const navLinks = [
 
 const Header = () => {
   const location = useLocation();
+  const { user, signOut } = useAuth();
   const totalItems = useCartStore((s) => s.totalItems());
   const { selectedCity, serviceType } = useLocationStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <>
