@@ -8,6 +8,8 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import AdminGuard from "@/components/AdminGuard";
 import AdminLayout from "@/components/AdminLayout";
+import DashboardGuard from "@/components/dashboard/DashboardGuard";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 const Index = lazy(() => import("./pages/Index"));
 const MenuPage = lazy(() => import("./pages/MenuPage"));
@@ -22,6 +24,16 @@ const OrdersPage = lazy(() => import("./pages/admin/OrdersPage"));
 const OrderDetailPage = lazy(() => import("./pages/admin/OrderDetailPage"));
 const AnalyticsPage = lazy(() => import("./pages/admin/AnalyticsPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+
+// Dashboard — powered by the Python FastAPI backend
+const DashboardLoginPage = lazy(() => import("./pages/dashboard/DashboardLoginPage"));
+const DashboardOrdersPage = lazy(() => import("./pages/dashboard/DashboardOrdersPage"));
+const DashboardOrderDetailPage = lazy(
+  () => import("./pages/dashboard/DashboardOrderDetailPage")
+);
+const DashboardAnalyticsPage = lazy(
+  () => import("./pages/dashboard/DashboardAnalyticsPage")
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,6 +59,7 @@ const App = () => (
         <AuthProvider>
           <Suspense fallback={<PageLoader />}>
             <Routes>
+              {/* Public storefront */}
               <Route element={<Layout />}>
                 <Route path="/" element={<Index />} />
                 <Route path="/menu" element={<MenuPage />} />
@@ -57,12 +70,25 @@ const App = () => (
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
               </Route>
+
+              {/* Supabase-auth admin */}
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
                 <Route path="orders" element={<OrdersPage />} />
                 <Route path="orders/:id" element={<OrderDetailPage />} />
                 <Route path="analytics" element={<AnalyticsPage />} />
               </Route>
+
+              {/* Python API dashboard */}
+              <Route path="/dashboard/login" element={<DashboardLoginPage />} />
+              <Route element={<DashboardGuard />}>
+                <Route element={<DashboardLayout />}>
+                  <Route path="/dashboard/orders" element={<DashboardOrdersPage />} />
+                  <Route path="/dashboard/orders/:id" element={<DashboardOrderDetailPage />} />
+                  <Route path="/dashboard/analytics" element={<DashboardAnalyticsPage />} />
+                </Route>
+              </Route>
+
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
