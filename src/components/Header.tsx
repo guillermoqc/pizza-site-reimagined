@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, MapPin, Menu, X, Pizza } from "lucide-react";
+import { ShoppingCart, MapPin, Menu, X, Pizza, LogIn, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useCartStore } from "@/store/cartStore";
 import { useLocationStore } from "@/store/locationStore";
 import { Button } from "@/components/ui/button";
