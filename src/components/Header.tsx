@@ -64,6 +64,21 @@ const Header = () => {
               </span>
             </div>
 
+            {/* Auth button */}
+            {user ? (
+              <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1.5 text-muted-foreground hover:text-foreground">
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline text-xs">Salir</span>
+              </Button>
+            ) : (
+              <Button variant="ghost" size="sm" asChild className="gap-1.5 text-muted-foreground hover:text-foreground">
+                <Link to="/auth">
+                  <LogIn className="h-4 w-4" />
+                  <span className="hidden sm:inline text-xs">Admin</span>
+                </Link>
+              </Button>
+            )}
+
             {/* Cart button */}
             <Button
               variant="outline"
