@@ -144,7 +144,7 @@ export default function DashboardAnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis
                   dataKey="status"
-                  tick={{ fontSize: 12, textTransform: "capitalize" }}
+                  tick={{ fontSize: 12 }}
                   tickFormatter={(v) => v.charAt(0).toUpperCase() + v.slice(1)}
                 />
                 <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />

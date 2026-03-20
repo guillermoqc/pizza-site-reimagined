@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, MapPin, Menu, X, Pizza } from "lucide-react";
+import { ShoppingCart, MapPin, Menu, X, Pizza, LogIn, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useCartStore } from "@/store/cartStore";
 import { useLocationStore } from "@/store/locationStore";
 import { Button } from "@/components/ui/button";
@@ -15,10 +16,15 @@ const navLinks = [
 
 const Header = () => {
   const location = useLocation();
+  const { user, signOut } = useAuth();
   const totalItems = useCartStore((s) => s.totalItems());
   const { selectedCity, serviceType } = useLocationStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <>
@@ -62,6 +68,21 @@ const Header = () => {
                 {serviceType === "delivery" ? "Envío" : "Recoger"}
               </span>
             </div>
+
+            {/* Auth button */}
+            {user ? (
+              <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1.5 text-muted-foreground hover:text-foreground">
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline text-xs">Salir</span>
+              </Button>
+            ) : (
+              <Button variant="ghost" size="sm" asChild className="gap-1.5 text-muted-foreground hover:text-foreground">
+                <Link to="/auth">
+                  <LogIn className="h-4 w-4" />
+                  <span className="hidden sm:inline text-xs">Admin</span>
+                </Link>
+              </Button>
+            )}
 
             {/* Cart button */}
             <Button
