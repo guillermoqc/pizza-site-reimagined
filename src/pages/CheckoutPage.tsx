@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
 
-const STORE_ID = "355aad93-fb3d-4b7a-a9de-64efd77437f3";
+const STORE_ID = import.meta.env.VITE_STORE_ID as string;
 
 const checkoutSchema = z.object({
   name: z.string().min(2, "Nombre requerido").max(100),
@@ -61,7 +61,6 @@ const CheckoutPage = () => {
           store_id: STORE_ID,
           customer_name: data.name,
           customer_phone: data.phone,
-          total_amount: totalPrice(),
           items: orderItems,
         },
       });
@@ -73,8 +72,7 @@ const CheckoutPage = () => {
       setOrderPlaced(true);
       clearCart();
       toast.success("¡Orden realizada con éxito!");
-    } catch (err: any) {
-      console.error("Checkout error:", err);
+    } catch {
       toast.error("Error al procesar tu orden. Intenta de nuevo.");
     } finally {
       setSubmitting(false);
