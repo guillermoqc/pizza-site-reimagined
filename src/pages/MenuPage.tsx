@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -10,9 +10,19 @@ const allCategories: ProductCategory[] = ["pizzas", "combos", "sides", "drinks",
 
 const MenuPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeCategory = (searchParams.get("category") as ProductCategory) || "pizzas";
+  const rawCategory = searchParams.get("category");
+  const categoryParam = allCategories.includes(rawCategory as ProductCategory)
+    ? (rawCategory as ProductCategory)
+    : null;
+  const activeCategory: ProductCategory = categoryParam ?? "pizzas";
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"default" | "price-asc" | "price-desc">("default");
+
+  useEffect(() => {
+    if (rawCategory && !categoryParam) {
+      setSearchParams({ category: "pizzas" }, { replace: true });
+    }
+  }, [categoryParam, rawCategory, setSearchParams]);
 
   const filtered = useMemo(() => {
     let result = products.filter((p) => p.category === activeCategory);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Minus, Plus, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,14 @@ const ProductDetailPage = () => {
   const [selectedCrust, setSelectedCrust] = useState(product?.crusts[0]?.name || "");
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    if (!product) return;
+    setSelectedSize(product.sizes[0]?.name || "");
+    setSelectedCrust(product.crusts[0]?.name || "");
+    setSelectedAddons([]);
+    setQuantity(1);
+  }, [product?.id]);
 
   if (!product) {
     return (
