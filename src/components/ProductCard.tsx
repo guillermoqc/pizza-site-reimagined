@@ -9,7 +9,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Link
       to={`/product/${product.id}`}
-      className="group bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border"
+      className="group bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-border/60"
     >
       <div className="aspect-square overflow-hidden">
         <img
@@ -26,7 +26,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <span className="font-display font-bold text-lg text-primary">
             Q{product.basePrice.toFixed(2)}
           </span>
-          <span className="text-xs bg-primary text-primary-foreground px-3 py-1.5 rounded-full font-semibold group-hover:bg-accent transition-colors">
+          <span className="text-xs bg-primary text-primary-foreground px-3 py-1.5 rounded-full font-semibold group-hover:bg-accent group-hover:scale-105 transition-all">
             Ordenar
           </span>
         </div>

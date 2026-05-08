@@ -23,11 +23,11 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 to-foreground/30" />
         <div className="relative container h-full flex items-center">
           <div className="max-w-lg space-y-4 text-primary-foreground">
-            <h1 className="font-display font-black text-4xl md:text-6xl leading-tight">
+            <h1 className="font-display font-black text-4xl md:text-6xl leading-tight animate-scale-in [animation-fill-mode:both]">
               {banner.title}
             </h1>
-            <p className="text-lg md:text-xl opacity-90">{banner.subtitle}</p>
-            <Button size="lg" asChild className="text-lg px-8">
+            <p className="text-lg md:text-xl opacity-90 animate-fade-in [animation-fill-mode:both] [animation-delay:200ms]">{banner.subtitle}</p>
+            <Button size="lg" asChild className="text-lg px-8 animate-fade-in [animation-fill-mode:both] [animation-delay:400ms]">
               <Link to={banner.link}>{banner.cta}</Link>
             </Button>
           </div>
@@ -71,7 +71,7 @@ const Index = () => {
             <Link
               key={cat}
               to={`/menu?category=${cat}`}
-              className="group relative aspect-square rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all"
+              className="group relative aspect-square rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
             >
               <img
                 src={categoryImages[cat]}
@@ -79,9 +79,9 @@ const Index = () => {
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent group-hover:from-primary/80 transition-colors duration-300" />
               <div className="absolute bottom-0 left-0 right-0 p-4">
-                <span className="font-display font-bold text-primary-foreground text-lg">
+                <span className="font-display font-bold text-primary-foreground text-lg group-hover:tracking-wide transition-all duration-300">
                   {categoryLabels[cat]}
                 </span>
               </div>

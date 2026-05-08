@@ -115,7 +115,7 @@ const CheckoutPage = () => {
         <ArrowLeft className="h-4 w-4" /> Volver
       </button>
 
-      <h1 className="font-display font-bold text-3xl mb-8">Checkout</h1>
+      <h1 className="font-display font-bold text-3xl mb-8">Finalizar Pedido</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         {/* Form */}

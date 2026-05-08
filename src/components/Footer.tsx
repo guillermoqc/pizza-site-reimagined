@@ -44,7 +44,7 @@ const Footer = () => {
             <h4 className="font-display font-bold mb-4">Newsletter</h4>
             <p className="text-sm opacity-70 mb-3">Recibe ofertas exclusivas en tu correo.</p>
             <div className="flex gap-2">
-              <Input placeholder="Tu email" className="bg-background/10 border-background/20 text-background placeholder:text-background/50" />
+              <Input placeholder="Tu email" className="bg-white/15 border-white/30 text-background placeholder:text-white/60 focus-visible:ring-white/50" />
               <Button size="sm">Enviar</Button>
             </div>
             <div className="flex gap-4 mt-4">

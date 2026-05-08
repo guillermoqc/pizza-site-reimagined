@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { products, categoryLabels, type ProductCategory } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 
@@ -61,21 +62,24 @@ const MenuPage = () => {
             className="pl-10"
           />
         </div>
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as typeof sort)}
-          className="border rounded-lg px-3 py-2 text-sm bg-card text-foreground"
-        >
-          <option value="default">Ordenar por</option>
-          <option value="price-asc">Precio: menor a mayor</option>
-          <option value="price-desc">Precio: mayor a menor</option>
-        </select>
+        <Select value={sort} onValueChange={(v) => setSort(v as typeof sort)}>
+          <SelectTrigger className="w-full sm:w-[200px]">
+            <SelectValue placeholder="Ordenar por" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="default">Ordenar por</SelectItem>
+            <SelectItem value="price-asc">Precio: menor a mayor</SelectItem>
+            <SelectItem value="price-desc">Precio: mayor a menor</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Products grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filtered.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {filtered.map((product, index) => (
+          <div key={product.id} className="animate-fade-in [animation-fill-mode:both]" style={{ animationDelay: `${index * 50}ms` }}>
+            <ProductCard product={product} />
+          </div>
         ))}
       </div>
 
