@@ -29,8 +29,17 @@ export const useDashboardAuth = create<DashboardAuthState>()(
     }),
     {
       name: "dashboard-auth",
+      // sessionStorage scopes the token to the current browser tab; tokens are
+      // cleared when the tab closes, reducing the window of exposure vs. localStorage.
+      storage: {
+        getItem: (key) => {
+          const v = sessionStorage.getItem(key);
+          return v ? JSON.parse(v) : null;
+        },
+        setItem: (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
+        removeItem: (key) => sessionStorage.removeItem(key),
+      },
       onRehydrateStorage: () => (state) => {
-        // Re-attach token to the API client after page reload
         if (state?.token) {
           dashboardApi.setToken(state.token);
         }

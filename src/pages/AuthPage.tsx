@@ -66,7 +66,7 @@ const AuthPage = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Contraseña</Label>
-                  <Input id="login-password" name="password" type="password" required minLength={6} />
+                  <Input id="login-password" name="password" type="password" required minLength={8} />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -82,7 +82,7 @@ const AuthPage = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="reg-password">Contraseña</Label>
-                  <Input id="reg-password" name="password" type="password" required minLength={6} />
+                  <Input id="reg-password" name="password" type="password" required minLength={8} />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
